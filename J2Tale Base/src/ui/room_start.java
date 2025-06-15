@@ -31,6 +31,9 @@ public class room_start extends AbstractCanvas {
     private int intro = 0;
     private int BGColor = 0x000000;
     private int typingLenght = 0;
+	
+	private boolean onIntro = midlet.getBooleanData("onIntro");
+	private boolean onMusic = midlet.getBooleanData("onMusic");
     
     private String ViewText = "";
     
@@ -48,6 +51,9 @@ public class room_start extends AbstractCanvas {
 	private void update() {
 		switch (timer) {
 			case 40:
+				if (onIntro == false) {
+					this.timer = 1820;
+				}
 				midlet.cleanupResources();
 				this.frame = 1;
 				this.intro = 1;
@@ -117,7 +123,7 @@ public class room_start extends AbstractCanvas {
 		
 		if (frame == 1) {
 			if (playedMIDI == false) {
-				midlet.playMIDI("mus_onceuponatime", 0);
+				midlet.playMIDI("mus_onceuponatime", 0, onMusic);
 				this.playedMIDI = true;
 			}
 

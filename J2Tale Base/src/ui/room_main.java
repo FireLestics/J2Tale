@@ -28,6 +28,9 @@ public class room_main extends AbstractCanvas {
     private int startPosX = 0;
     private int startPosY = 0;
 	
+	private boolean onIntro = midlet.getBooleanData("onIntro");
+	private boolean onMusic = midlet.getBooleanData("onMusic");
+	
 	private int PressedKey = 0;
     
     private String instruction = "";
@@ -45,7 +48,7 @@ public class room_main extends AbstractCanvas {
             textBlitter.loadFont("fnt_main", "default");
         } catch (IOException e) {}
 		
-		midlet.playMIDI("mus_menu01", -1);
+		midlet.playMIDI("mus_menu01", -1, onMusic);
 		
 		menuItems = new Vector();
         menuItems.addElement("Begin Game");
@@ -81,10 +84,10 @@ public class room_main extends AbstractCanvas {
 		
 		settingsItems = new Vector();
         settingsItems.addElement("EXIT");
-        settingsItems.addElement("CONTROL OPTIONS");
-        settingsItems.addElement("CONTROL TEST");
-        settingsItems.addElement("MUSIC:     [no work]");
-        settingsItems.addElement("INTRO:     [no work]");
+        settingsItems.addElement("CONTROL OPTIONS <color:gray>(no work)");
+        settingsItems.addElement("CONTROL TEST <color:gray>(no work)");
+        settingsItems.addElement("MUSIC:");
+        settingsItems.addElement("INTRO:");
     }
 	
 	private void update() {
@@ -122,8 +125,6 @@ public class room_main extends AbstractCanvas {
 				drawErrorScrn(g);
 				break;
 		}
-		textBlitter.setFont("fnt_maintext", "red");
-		textBlitter.drawString(g, "Key Pressed: " + PressedKey, 5, 5);
     }
 	
 	private void drawInstruction(Graphics g) {
@@ -336,7 +337,15 @@ public class room_main extends AbstractCanvas {
 			} else {
 				textBlitter.setFont("fnt_maintext", "white");
 			}
-			textBlitter.drawString(g, item, 40, 50 + (i * 16));
+			if (item == "MUSIC:") {
+				textBlitter.drawString(g, item, 40, 50 + (i * 16));
+				textBlitter.drawString(g, "" + onMusic, 120, 50 + (i * 16));
+			} else if (item == "INTRO:") {
+				textBlitter.drawString(g, item, 40, 50 + (i * 16));
+				textBlitter.drawString(g, "" + onIntro, 120, 50 + (i * 16));
+			} else {
+				textBlitter.drawString(g, item, 40, 50 + (i * 16));
+			}
 		}
 	}
 	
@@ -484,9 +493,14 @@ public class room_main extends AbstractCanvas {
             String selectedItem = (String) menuItems.elementAt(mainSelIndex);
             if (selectedItem.equals("Begin Game")) {
                 this.frame = 1;
-            } if (selectedItem.equals("Settings")) {
+            }
+			if (selectedItem.equals("Settings")) {
+				midlet.stopAllMIDI();
+				this.onIntro = midlet.getBooleanData("onIntro");
+				this.onMusic = midlet.getBooleanData("onMusic");
                 this.frame = 3;
-            }  if (selectedItem.equals("Controls")) {
+            }
+			if (selectedItem.equals("Controls")) {
                 midlet.switchCanvas(new room_controls(midlet));
             } 
         } else if (frame == 1) {
@@ -499,7 +513,16 @@ public class room_main extends AbstractCanvas {
         } else if (frame == 3) {
             String selectedItem = (String) settingsItems.elementAt(settSelIndex);
             if (selectedItem.equals("EXIT")) {
-                this.frame = 0; 
+				midlet.playMIDI("mus_menu01", -1, onMusic);
+				midlet.saveBooleanData("onMusic", onMusic);
+				midlet.saveBooleanData("onIntro", onIntro);
+                this.frame = 0;
+			}
+			if (selectedItem.equals("MUSIC:")) {
+				this.onMusic = !onMusic;
+			}
+			if (selectedItem.equals("INTRO:")) {
+				this.onIntro = !onIntro;
 			}
         }
         
