@@ -87,7 +87,6 @@ public class Player {
     private String currentAnimation = "Idle";
     private String currentDirection = "down";
     private String lastTriggerAction = "";
-    private String lastNpcDialog = "";
 
     private int animationSpeed;
     private int animationCounter = 0;

@@ -15,9 +15,8 @@ public class TilesetMap {
     private int tileHeight;
     private int tilesPerRow;
     
-    private boolean centered = false;
-    private int viewRadiusX = 9;
-    private int viewRadiusY = 9;
+    private int viewRadiusX = 6;
+    private int viewRadiusY = 6;
 
     private int cameraX = 0;
     private int cameraY = 0;
