@@ -32,7 +32,9 @@ public class room_overworld extends AbstractCanvas {
     
     private int onMenu = 0;
     private int dropDownTimer = 0;
-    private int RenderRadius = 5;
+    
+    private int RenderRadiusX = (width / 20);
+    private int RenderRadiusY = (height / 20) + 2;
 
     public room_overworld(MainMIDlet midlet) {
         super(midlet);
@@ -56,19 +58,14 @@ public class room_overworld extends AbstractCanvas {
         collisions = new TilesetMap("/maps/ruins19_collisions.csv", null, 20, 20);
         collisions.generateCollisions(player, new int[]{0});
         
-        map1.setViewRadiusX(RenderRadius);
-        map2.setViewRadiusX(RenderRadius);
-        map3.setViewRadiusX(RenderRadius);
-        map1.setViewRadiusY(RenderRadius);
-        map2.setViewRadiusY(RenderRadius);
-        map3.setViewRadiusY(RenderRadius);
+        map1.setViewRadiusX(RenderRadiusX);
+        map2.setViewRadiusX(RenderRadiusX);
+        map3.setViewRadiusX(RenderRadiusX);
+        map1.setViewRadiusY(RenderRadiusY);
+        map2.setViewRadiusY(RenderRadiusY);
+        map3.setViewRadiusY(RenderRadiusY);
         
         player.addTriggerZone(260, 160, 20, 20, "dropdown_1", "dropdown_1");
-        player.addTriggerZone(380, 160, 20, 20, "dropdown_2", "dropdown_2");
-        player.addTriggerZone(500, 160, 20, 20, "dropdown_3", "dropdown_3");
-        player.addTriggerZone(260, 280, 20, 20, "dropdown_4", "dropdown_4");
-        player.addTriggerZone(380, 280, 20, 20, "dropdown_5", "dropdown_5");
-        player.addTriggerZone(500, 280, 20, 20, "dropdown_6", "dropdown_6");
         // player.addNPC(200, 20, 16, 32, "Bob");
         
         player.setScreenSize(width, height);
@@ -91,111 +88,11 @@ public class room_overworld extends AbstractCanvas {
                 this.dropDownTimer++;
             }
         }
-        if (player.isInsideTrigger("dropdown_2")) {
-            player.pauseMovement();
-            player.setNoClip(true);
-            if (dropDownTimer >= 20) {
-                this.dropDown = true;
-            } else {
-                this.dropDownTimer++;
-            }
-        }
-        if (player.isInsideTrigger("dropdown_3")) {
-            player.pauseMovement();
-            player.setNoClip(true);
-            if (dropDownTimer >= 20) {
-                this.dropDown = true;
-            } else {
-                this.dropDownTimer++;
-            }
-        }
-        if (player.isInsideTrigger("dropdown_4")) {
-            player.pauseMovement();
-            player.setNoClip(true);
-            if (dropDownTimer >= 20) {
-                this.dropDown = true;
-            } else {
-                this.dropDownTimer++;
-            }
-        }
-        if (player.isInsideTrigger("dropdown_5")) {
-            player.pauseMovement();
-            player.setNoClip(true);
-            if (dropDownTimer >= 20) {
-                this.dropDown = true;
-            } else {
-                this.dropDownTimer++;
-            }
-        }
-        if (player.isInsideTrigger("dropdown_6")) {
-            player.pauseMovement();
-            player.setNoClip(true);
-            if (dropDownTimer >= 20) {
-                this.dropDown = true;
-            } else {
-                this.dropDownTimer++;
-            }
-        }
         if (dropDown == true) {
             if ("dropdown_1".equals(player.getLastTriggerAction())) {
                 player.setY(player.getY() + 4);
                 player.changeAnimation("DropDown", player.getCurrentDirection());
                 if (player.getY() >= 510) {
-                    player.setNoClip(false);
-                    player.resumeMovement();
-                    this.dropDownTimer = 0;
-                    this.dropDown = false;
-                    player.changeAnimation("Idle", player.getCurrentDirection());
-                }
-            }
-            if ("dropdown_2".equals(player.getLastTriggerAction())) {
-                player.setY(player.getY() + 4);
-                player.changeAnimation("DropDown", player.getCurrentDirection());
-                if (player.getY() >= 510) {
-                    player.setNoClip(false);
-                    player.resumeMovement();
-                    this.dropDownTimer = 0;
-                    this.dropDown = false;
-                    player.changeAnimation("Idle", player.getCurrentDirection());
-                }
-            }
-            if ("dropdown_3".equals(player.getLastTriggerAction())) {
-                player.setY(player.getY() + 4);
-                player.changeAnimation("DropDown", player.getCurrentDirection());
-                if (player.getY() >= 510) {
-                    player.setNoClip(false);
-                    player.resumeMovement();
-                    this.dropDownTimer = 0;
-                    this.dropDown = false;
-                    player.changeAnimation("Idle", player.getCurrentDirection());
-                }
-            }
-            if ("dropdown_4".equals(player.getLastTriggerAction())) {
-                player.setY(player.getY() + 4);
-                player.changeAnimation("DropDown", player.getCurrentDirection());
-                if (player.getY() >= 650) {
-                    player.setNoClip(false);
-                    player.resumeMovement();
-                    this.dropDownTimer = 0;
-                    this.dropDown = false;
-                    player.changeAnimation("Idle", player.getCurrentDirection());
-                }
-            }
-            if ("dropdown_5".equals(player.getLastTriggerAction())) {
-                player.setY(player.getY() + 4);
-                player.changeAnimation("DropDown", player.getCurrentDirection());
-                if (player.getY() >= 650) {
-                    player.setNoClip(false);
-                    player.resumeMovement();
-                    this.dropDownTimer = 0;
-                    this.dropDown = false;
-                    player.changeAnimation("Idle", player.getCurrentDirection());
-                }
-            }
-            if ("dropdown_6".equals(player.getLastTriggerAction())) {
-                player.setY(player.getY() + 4);
-                player.changeAnimation("DropDown", player.getCurrentDirection());
-                if (player.getY() >= 650) {
                     player.setNoClip(false);
                     player.resumeMovement();
                     this.dropDownTimer = 0;
@@ -224,6 +121,7 @@ public class room_overworld extends AbstractCanvas {
         map3.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
         player.draw(g, imageDrawer);
         player.drawDebug(g, true, false, true, false);
+            player.setNoClip(true);
         
         if (onMenu >= 1) {
             menu.drawMenu_1(g, 5, 5, midlet.getStringData("playerName"), 1, 15, 20, 0);

@@ -175,35 +175,23 @@ public class TilesetMap {
         result[i] = s.substring(start);
         return result;
     }
-    
-    public void setCentered(boolean centered) {
-        this.centered = centered;
-    }
 
     public void setCameraByPlayer(int playerX, int playerY, int screenWidth, int screenHeight) {
-        if (centered) {
-            int mapWidthPixels = backgroundLayer[0].length * tileWidth;
-            int mapHeightPixels = backgroundLayer.length * tileHeight;
+        // Камера следует за игроком, но ограничена по краям карты
+        int halfScreenWidth = screenWidth / 2;
+        int halfScreenHeight = screenHeight / 2;
 
-            cameraX = -(screenWidth - mapWidthPixels) / 2;
-            cameraY = -(screenHeight - mapHeightPixels) / 2;
-        } else {
-            // Камера следует за игроком, но ограничена по краям карты
-            int halfScreenWidth = screenWidth / 2;
-            int halfScreenHeight = screenHeight / 2;
+        int mapWidthPixels = backgroundLayer[0].length * tileWidth;
+        int mapHeightPixels = backgroundLayer.length * tileHeight;
 
-            int mapWidthPixels = backgroundLayer[0].length * tileWidth;
-            int mapHeightPixels = backgroundLayer.length * tileHeight;
+        cameraX = playerX - halfScreenWidth;
+        cameraY = playerY - halfScreenHeight;
 
-            cameraX = playerX - halfScreenWidth;
-            cameraY = playerY - halfScreenHeight;
-
-            // Ограничиваем камеру, чтобы не выйти за границы карты
-            if (cameraX < 0) cameraX = 0;
-            if (cameraY < 0) cameraY = 0;
-            if (cameraX > mapWidthPixels - screenWidth) cameraX = mapWidthPixels - screenWidth;
-            if (cameraY > mapHeightPixels - screenHeight) cameraY = mapHeightPixels - screenHeight;
-        }
+        // Ограничиваем камеру, чтобы не выйти за границы карты
+        if (cameraX < 0) cameraX = 0;
+        if (cameraY < 0) cameraY = 0;
+        if (cameraX > mapWidthPixels - screenWidth - 120) cameraX = mapWidthPixels - screenWidth - 120;
+        if (cameraY > mapHeightPixels - screenHeight) cameraY = mapHeightPixels - screenHeight;
     }
 
     public int getMapWidth() {
