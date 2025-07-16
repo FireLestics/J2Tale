@@ -33,6 +33,7 @@ public class MainMIDlet extends MIDlet {
         saveManager = new GameSaveManager();
         player = new SimpleMIDIPlayer();
         display = Display.getDisplay(this);
+        //switchCanvas(new room_overworld(this));
         switchCanvas(new game_start(this));
     }
 

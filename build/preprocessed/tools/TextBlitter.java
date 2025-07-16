@@ -10,6 +10,18 @@ public class TextBlitter {
     private String currentFontColor;
     private Hashtable colorImages = new Hashtable();
     private Random random = new Random();
+    
+    private static class Glyph {
+        int x, y, w, h, s;
+
+        Glyph(int x, int y, int w, int h, int s) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.s = s;
+        }
+    }
 
     public void loadFont(String fontName) throws IOException {
         loadFont(fontName, null);
@@ -146,6 +158,22 @@ public class TextBlitter {
         Font f = getFont();
         return f != null ? f.width(text) : 0;
     }
+    
+    public int stringLength(String text) {
+        String finalText = "";
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '<') {
+                int e = text.indexOf(">", i);
+                if (e > i) {
+                    i = e;
+                    continue;
+                }
+            }
+            finalText = finalText + ch;
+        }
+        return finalText.length();
+    }
 
     private static String[] split(String s, String delim) {
         Vector list = new Vector();
@@ -160,18 +188,6 @@ public class TextBlitter {
             arr[i] = (String) list.elementAt(i);
         }
         return arr;
-    }
-
-    private static class Glyph {
-        int x, y, w, h, s;
-
-        Glyph(int x, int y, int w, int h, int s) {
-            this.x = x;
-            this.y = y;
-            this.w = w;
-            this.h = h;
-            this.s = s;
-        }
     }
 
     private class Font {

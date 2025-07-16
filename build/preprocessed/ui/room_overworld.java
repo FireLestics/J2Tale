@@ -32,6 +32,16 @@ public class room_overworld extends AbstractCanvas {
     private int dropDownTimer = 0;
     private int menuYScale = 38;
     
+    private boolean onDialog = false;
+    private boolean onDownView = true;
+    private boolean onFace = false;
+    private String[] dialogs;
+    private int dialogPos;
+    private int dialogNum;
+    private int dialogStrMax;
+    
+    private int keyCode;
+    
     private int RenderRadiusX = (width / 20);
     private int RenderRadiusY = (height / 20) + 2;
     
@@ -70,13 +80,24 @@ public class room_overworld extends AbstractCanvas {
         map2.setViewRadiusY(RenderRadiusY);
         map3.setViewRadiusY(RenderRadiusY);
         
-        player.addTriggerZone(260, 160, 20, 20, "dropdown_1", "dropdown_1");
-        // player.addNPC(200, 20, 16, 32, "Bob");
+        CreateColissions();
         
         player.setScreenSize(width, height);
         player.setMapSize(map1.getMapWidth(), map1.getMapHeight());
         
         player.setCollisionRect(-9, -8, 19, 8);
+    }
+    
+    private void CreateColissions() {
+        player.addTriggerZone(260, 160, 20, 20, "dropdown_1", "dropdown_1");
+        player.addTriggerZone(264, 460, 12, 18, "returnRoom_1", "returnRoom_1");
+        player.addTriggerZone(264, 600, 12, 18, "returnRoom_1", "returnRoom_1");
+        player.addTriggerZone(424, 460, 12, 18, "returnRoom_2", "returnRoom_2");
+        player.addTriggerZone(424, 600, 12, 18, "returnRoom_2", "returnRoom_2");
+        player.addTriggerZone(564, 460, 12, 18, "returnRoom_3", "returnRoom_3");
+        player.addTriggerZone(564, 600, 12, 18, "returnRoom_3", "returnRoom_3");
+        
+        player.addNPC(100, 90, 16, 32, "table");
     }
 
     protected void update() {
@@ -96,6 +117,7 @@ public class room_overworld extends AbstractCanvas {
         if (dropDown == true) {
             if ("dropdown_1".equals(player.getLastTriggerAction())) {
                 player.setY(player.getY() + 4);
+                player.pauseMovement();
                 player.changeAnimation("DropDown", player.getCurrentDirection());
                 if (player.getY() >= 510) {
                     player.setNoClip(false);
@@ -103,6 +125,28 @@ public class room_overworld extends AbstractCanvas {
                     this.dropDownTimer = 0;
                     this.dropDown = false;
                     player.changeAnimation("Idle", player.getCurrentDirection());
+                }
+            }
+        }
+        
+        if (player.isInsideTrigger("returnRoom_1")) {
+            player.setX(190);
+            player.setY(150);
+        }
+        if (player.isInsideTrigger("returnRoom_2")) {
+            player.setX(430);
+            player.setY(150);
+        }
+        if (player.isInsideTrigger("returnRoom_3")) {
+            player.setX(570);
+            player.setY(150);
+        }
+        
+        if (keyCode == midlet.getKeyCode("z")) {
+            if (player.isNearNPC("table")) {
+                if (player.isFacingNPC("table")) {
+                    startDialog(new String[] {"Привет всем, это тест <color:green><shake:1,1>диалогов<shake:off><color:white>...", "И они работают!!!"}, false);
+                    this.keyCode = 0;
                 }
             }
         }
@@ -125,7 +169,7 @@ public class room_overworld extends AbstractCanvas {
         map2.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
         map3.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
         player.draw(g, imageDrawer);
-        player.drawDebug(g, true, false, true, false);
+        player.drawDebug(g, true, false, false, true);
         
         if (onMenu >= 1) {
             player.pauseMovement();
@@ -157,10 +201,47 @@ public class room_overworld extends AbstractCanvas {
                 textBlitter.setFont("fnt_maintext", "white");
                 textBlitter.drawString(g, item, 5 + 28, 58 + 11 + (16 * i));
             }
-            g.setClip(0, 0, getWidth(), getHeight());
         }
         if (onMenu == 2) {
+            g.setColor(0x000000);
+        }
+        
+        if (onDialog) {
+            player.pauseMovement();
             
+            int x = 4;
+            int y = 4;
+            int dWidth = 232;
+            int dHeight = 82;
+            int textX = 12;
+            int textY = 8;
+            int dia = midlet.getScreenDia(width, height);
+            
+            if (onDownView) {
+                y = (height - dHeight) - 4;
+            } else {
+                y = 4;
+            }
+            
+            if (onFace) {
+                textX = 74;
+            } else {
+                textX = 12;
+            }
+            
+            g.setColor(0x000000);
+            g.fillRect(x, y, dWidth, dHeight);
+            g.setColor(0xFFFFFF);
+            drawThickRect(g, x, y, dWidth, dHeight, 3);
+            
+            if (dialogPos < dialogs[dialogNum].length()) {
+                 this.dialogPos++;
+            }
+            
+            textBlitter.setFont("fnt_maintext", "white");
+            textBlitter.drawTypingText(g, dialogs[dialogNum], x + textX, y + textY, dialogPos);
+            
+            g.setClip(0, 0, getWidth(), getHeight());
         }
         
         // Основные функции
@@ -207,6 +288,20 @@ public class room_overworld extends AbstractCanvas {
             g.drawRect(x + i, y + i, w - 2 * i, h - 2 * i);
         }
     }
+    
+    public void startDialog(String[] dialogs, boolean face) {
+        this.dialogs = dialogs;
+        if (player.getY() < (height / 2)) {
+            this.onDownView = false;
+        } else {
+            this.onDownView = true;
+        }
+        this.onFace = face;
+        this.dialogPos = 0;
+        this.dialogNum = 0;
+        this.dialogStrMax = dialogs.length - 2;
+        this.onDialog = true;
+    }
 
     private void updatePlayerPosition() {
         if (upPressed && downPressed) {
@@ -230,7 +325,7 @@ public class room_overworld extends AbstractCanvas {
     }
 
     protected void keyPressed(int keyCode) {
-        if (onMenu == 0) {
+        if (onMenu == 0 && onDialog == false) {
             if (keyCode == midlet.getKeyCode("up")) {
                 upPressed = true;
             }
@@ -246,10 +341,33 @@ public class room_overworld extends AbstractCanvas {
             if (keyCode == midlet.getKeyCode("c")) {
                 onMenu = 1;
             }
+            this.keyCode = keyCode;
         } else {
-            if (keyCode == midlet.getKeyCode("x")) {
-                onMenu--;
-                player.resumeMovement();
+            if (onMenu > 0) {
+                if (keyCode == midlet.getKeyCode("x")) {
+                    onMenu--;
+                    player.resumeMovement();
+                }
+            }
+            if (onDialog) {
+                if (keyCode == midlet.getKeyCode("z")) {
+                    if (dialogNum > dialogStrMax) {
+                        this.dialogs = new String[] {};
+                        this.onDownView = false;
+                        this.onFace = false;
+                        this.dialogPos = 0;
+                        this.dialogNum = 0;
+                        this.dialogStrMax = 0;
+                        this.onDialog = false;
+                        player.resumeMovement();
+                    } else if (dialogPos >= textBlitter.stringLength(dialogs[dialogNum])) {
+                        this.dialogNum = dialogNum + 1;
+                        this.dialogPos = 0;
+                    }
+                }
+                if (keyCode == midlet.getKeyCode("x")) {
+                    this.dialogPos = dialogs[dialogNum].length();
+                }
             }
         }
     }

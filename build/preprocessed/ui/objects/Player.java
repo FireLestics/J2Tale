@@ -319,13 +319,9 @@ public class Player {
 
             for (int i = 0; i < triggerZones.size(); i++) {
                 TriggerZone zone = (TriggerZone) triggerZones.elementAt(i);
-                if (zone.isPlayerInside(playerLeft, playerTop, collisionW, collisionH)) {
-                    lastTriggerAction = zone.action;
-                    System.out.println("Triggered: " + zone.action);
-                    // Здесь можно добавить выполнение действия
-                }
+                if (zone.isPlayerInside(playerLeft, playerTop, collisionW, collisionH)) { lastTriggerAction = zone.action; }
             }
-        }
+        } else {}
     }
 
     // ─── NPC ────────────────────────────────
@@ -335,12 +331,12 @@ public class Player {
     }
 
     public void checkNpcInteraction() {
-        for (int i = 0; i < npcs.size(); i++) {
-            NPC npc = (NPC) npcs.elementAt(i);
-            if (npc.isNearPlayer(x + frameWidth / 2, y + frameHeight / 2, 32)) { // Радиус взаимодействия
-                System.out.println("Talking to " + npc.name);
+        if (noClip == false) {
+            for (int i = 0; i < npcs.size(); i++) {
+                NPC npc = (NPC) npcs.elementAt(i);
+                if (npc.isNearPlayer(x + frameWidth / 2, y + frameHeight / 2, 32)) {}
             }
-        }
+        } else {}
     }
 
     // ─── Камера ────────────────────────────────
@@ -426,53 +422,59 @@ public class Player {
     }
     
     public boolean isInsideTrigger(String triggerId) {
-        for (int i = 0; i < triggerZones.size(); i++) {
-            TriggerZone tz = (TriggerZone) triggerZones.elementAt(i);
-            if (tz.id.equals(triggerId) &&
-                checkCollision(tz.x, tz.y, tz.width, tz.height)) {
-                return true;
+        if (noClip == false) {
+            for (int i = 0; i < triggerZones.size(); i++) {
+                TriggerZone tz = (TriggerZone) triggerZones.elementAt(i);
+                if (tz.id.equals(triggerId) &&
+                    checkCollision(tz.x, tz.y, tz.width, tz.height)) {
+                    return true;
+                }
             }
-        }
+        } else {}
         return false;
     }
     
     public boolean isNearNPC(String npcName) {
-        for (int i = 0; i < npcs.size(); i++) {
-            NPC npc = (NPC) npcs.elementAt(i);
-            if (npc.name.equals(npcName)) {
-                int dx = (x + collisionX + collisionW / 2) - (npc.x + npc.width / 2);
-                int dy = (y + collisionY + collisionH / 2) - (npc.y + npc.height / 2);
-                int distanceSquared = dx * dx + dy * dy;
-                return distanceSquared <= npc.radius * npc.radius;
+        if (noClip == false) {
+            for (int i = 0; i < npcs.size(); i++) {
+                NPC npc = (NPC) npcs.elementAt(i);
+                if (npc.name.equals(npcName)) {
+                    int dx = (x + collisionX + collisionW / 2) - (npc.x + npc.width / 2);
+                    int dy = (y + collisionY + collisionH / 2) - (npc.y + npc.height / 2);
+                    int distanceSquared = dx * dx + dy * dy;
+                    return distanceSquared <= npc.radius * npc.radius;
+                }
             }
-        }
+        } else {}
         return false;
     }
     
     public boolean isFacingNPC(String npcName) {
-        for (int i = 0; i < npcs.size(); i++) {
-            NPC npc = (NPC) npcs.elementAt(i);
-            if (npc.name.equals(npcName)) {
-                int npcCenterX = npc.x + npc.width / 2;
-                int npcCenterY = npc.y + npc.height / 2;
-                int playerCenterX = x + collisionX + collisionW / 2;
-                int playerCenterY = y + collisionY + collisionH / 2;
+        if (noClip == false) {
+            for (int i = 0; i < npcs.size(); i++) {
+                NPC npc = (NPC) npcs.elementAt(i);
+                if (npc.name.equals(npcName)) {
+                    int npcCenterX = npc.x + npc.width / 2;
+                    int npcCenterY = npc.y + npc.height / 2;
+                    int playerCenterX = x + collisionX + collisionW / 2;
+                    int playerCenterY = y + collisionY + collisionH / 2;
 
-                if (currentDirection.equals("up")) {
-                    return npcCenterY < playerCenterY &&
-                           Math.abs(npcCenterX - playerCenterX) < collisionW;
-                } else if (currentDirection.equals("down")) {
-                    return npcCenterY > playerCenterY &&
-                           Math.abs(npcCenterX - playerCenterX) < collisionW;
-                } else if (currentDirection.equals("left")) {
-                    return npcCenterX < playerCenterX &&
-                           Math.abs(npcCenterY - playerCenterY) < collisionH;
-                } else if (currentDirection.equals("right")) {
-                    return npcCenterX > playerCenterX &&
-                           Math.abs(npcCenterY - playerCenterY) < collisionH;
+                    if (currentDirection.equals("up")) {
+                        return npcCenterY < playerCenterY &&
+                               Math.abs(npcCenterX - playerCenterX) < collisionW;
+                    } else if (currentDirection.equals("down")) {
+                        return npcCenterY > playerCenterY &&
+                               Math.abs(npcCenterX - playerCenterX) < collisionW;
+                    } else if (currentDirection.equals("left")) {
+                        return npcCenterX < playerCenterX &&
+                               Math.abs(npcCenterY - playerCenterY) < collisionH;
+                    } else if (currentDirection.equals("right")) {
+                        return npcCenterX > playerCenterX &&
+                               Math.abs(npcCenterY - playerCenterY) < collisionH;
+                    }
                 }
             }
-        }
+        } else {}
         return false;
     }
     
