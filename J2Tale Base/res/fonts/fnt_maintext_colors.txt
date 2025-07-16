@@ -1,7 +1,0 @@
-red=fnt_maintext_red
-green=fnt_maintext_green
-blue=fnt_maintext_blue
-yellow=fnt_maintext_yellow
-white=fnt_maintext
-black=fnt_maintext_black
-gray=fnt_maintext_gray
