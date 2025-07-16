@@ -8,12 +8,10 @@ import app.MainMIDlet;
 import tools.TextBlitter;
 import tools.ImageDrawer;
 import ui.objects.Player;
-import ui.objects.Menu;
 import ui.objects.TilesetMap;
 
 public class room_overworld extends AbstractCanvas {
     private Player player;
-    private Menu menu;
     private TextBlitter textBlitter;
     private TilesetMap map1;
     private TilesetMap map2;
@@ -32,9 +30,16 @@ public class room_overworld extends AbstractCanvas {
     
     private int onMenu = 0;
     private int dropDownTimer = 0;
+    private int menuYScale = 38;
     
     private int RenderRadiusX = (width / 20);
     private int RenderRadiusY = (height / 20) + 2;
+    
+    private String playerName = midlet.getStringData("data_playerName");
+    private int playerLV = midlet.getIntData("data_playerLV");
+    private int playerHP = midlet.getIntData("data_playerHP");
+    private int playerHPMax = midlet.getIntData("data_playerHPMax");
+    private int playerGolds = midlet.getIntData("data_playerGolds");
 
     public room_overworld(MainMIDlet midlet) {
         super(midlet);
@@ -42,11 +47,11 @@ public class room_overworld extends AbstractCanvas {
         
         midlet.loadAllKeyCode();
         imageDrawer = new ImageDrawer();
-        menu = new Menu();
         
         textBlitter = new TextBlitter();
         try {
             textBlitter.loadFont("fnt_maintext", "default");
+            textBlitter.loadFont("fnt_small", "default");
         } catch (IOException e) {}
         
         player = new Player("Frisk", 60, 20, 3, 10);
@@ -121,14 +126,38 @@ public class room_overworld extends AbstractCanvas {
         map3.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
         player.draw(g, imageDrawer);
         player.drawDebug(g, true, false, true, false);
-            player.setNoClip(true);
         
         if (onMenu >= 1) {
-            menu.drawMenu_1(g, 5, 5, midlet.getStringData("playerName"), 1, 15, 20, 0);
-            g.setClip(0, 0, getWidth(), getHeight());
-            menu.drawMenu_2(g, 5, 58, 0, new String[]{"ITEM", "STAT" ,"CELL", "MAIL", "BAG"});
-            g.setClip(0, 0, getWidth(), getHeight());
             player.pauseMovement();
+            
+            String[] menu = new String[] {"ITEM", "STAT" ,"CELL", "MAIL", "BAG"};
+            
+            g.setColor(0x000000);
+            g.fillRect(5, 5, 70, 48);
+            g.setColor(0xFFFFFF);
+            drawThickRect(g, 5, 5, 70, 48, 3);
+            g.setClip(0, 0, getWidth(), getHeight());
+            
+            g.setColor(0x000000);
+            g.fillRect(5, 58, 70, menuYScale);
+            g.setColor(0xFFFFFF);
+            drawThickRect(g, 5, 58, 70, menuYScale, 3);
+            g.setClip(0, 0, getWidth(), getHeight());
+
+            textBlitter.setFont("fnt_maintext", "white");
+            textBlitter.drawString(g, playerName, 5 + 8, 5 + 5);
+            textBlitter.setFont("fnt_small", "white");
+            textBlitter.drawString(g, "LV\nHP\nG", 5 + 8, 5 + 20);
+            textBlitter.drawString(g, "" + playerLV + "\n" + playerHP + "/" + playerHPMax + "\n" + playerGolds, 5 + 24, 5 + 20);
+            g.setClip(0, 0, getWidth(), getHeight());
+            
+            for (int i = 0; i < menu.length; i++) {
+                this.menuYScale = 38 + (16 * i);
+                String item = menu[i];
+                textBlitter.setFont("fnt_maintext", "white");
+                textBlitter.drawString(g, item, 5 + 28, 58 + 11 + (16 * i));
+            }
+            g.setClip(0, 0, getWidth(), getHeight());
         }
         if (onMenu == 2) {
             
@@ -171,6 +200,12 @@ public class room_overworld extends AbstractCanvas {
         // player.getFrameHeight() - Int
         // player.getCameraX() - Int
         // player.getCameraY() - Int
+    }
+    
+    public void drawThickRect(Graphics g, int x, int y, int w, int h, int thickness) {
+        for (int i = 0; i < thickness; i++) {
+            g.drawRect(x + i, y + i, w - 2 * i, h - 2 * i);
+        }
     }
 
     private void updatePlayerPosition() {

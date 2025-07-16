@@ -177,7 +177,11 @@ public class game_acceptName extends AbstractCanvas {
         if (keyCode == midlet.getKeyCode("rb")) {
             if (RBText == "Yes") {
                 midlet.stopAllMIDI();
-                midlet.saveStringData("playerName", playerName);
+                midlet.saveStringData("data_playerName", playerName);
+                midlet.saveIntData("data_playerLV", 0);
+                midlet.saveIntData("data_playerHP", 0);
+                midlet.saveIntData("data_playerHPMax", 0);
+                midlet.saveIntData("data_playerGolds", 0);
                 midlet.switchCanvas(new room_overworld(midlet));
             }
         }
