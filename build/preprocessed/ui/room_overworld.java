@@ -32,6 +32,7 @@ public class room_overworld extends AbstractCanvas {
     
     private int onMenu = 0;
     private int dropDownTimer = 0;
+    private int RenderRadius = 5;
 
     public room_overworld(MainMIDlet midlet) {
         super(midlet);
@@ -54,6 +55,13 @@ public class room_overworld extends AbstractCanvas {
         map3 = new TilesetMap("/maps/ruins19_map3.csv", "/images/tiles/ruins.png", 20, 20);
         collisions = new TilesetMap("/maps/ruins19_collisions.csv", null, 20, 20);
         collisions.generateCollisions(player, new int[]{0});
+        
+        map1.setViewRadiusX(RenderRadius);
+        map2.setViewRadiusX(RenderRadius);
+        map3.setViewRadiusX(RenderRadius);
+        map1.setViewRadiusY(RenderRadius);
+        map2.setViewRadiusY(RenderRadius);
+        map3.setViewRadiusY(RenderRadius);
         
         player.addTriggerZone(260, 160, 20, 20, "dropdown_1", "dropdown_1");
         player.addTriggerZone(380, 160, 20, 20, "dropdown_2", "dropdown_2");
@@ -211,9 +219,9 @@ public class room_overworld extends AbstractCanvas {
         map3.setCamera(player.getCameraX(), player.getCameraY());
         collisions.setCamera(player.getCameraX(), player.getCameraY());
         
-        map1.draw(g, getWidth(), getHeight());
-        map2.draw(g, getWidth(), getHeight());
-        map3.draw(g, getWidth(), getHeight());
+        map1.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
+        map2.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
+        map3.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
         player.draw(g, imageDrawer);
         player.drawDebug(g, true, false, true, false);
         

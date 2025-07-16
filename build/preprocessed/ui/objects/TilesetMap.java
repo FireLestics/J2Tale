@@ -14,6 +14,10 @@ public class TilesetMap {
     private int tileWidth;
     private int tileHeight;
     private int tilesPerRow;
+    
+    private boolean centered = false;
+    private int viewRadiusX = 9;
+    private int viewRadiusY = 9;
 
     private int cameraX = 0;
     private int cameraY = 0;
@@ -105,48 +109,45 @@ public class TilesetMap {
         this.cameraY = y;
     }
 
-    public void drawBackground(Graphics g, int screenWidth, int screenHeight) {
-        drawLayer(g, backgroundLayer, screenWidth, screenHeight);
+    public void drawBackground(Graphics g, int screenWidth, int screenHeight, int playerX, int playerY) {
+        drawLayer(g, backgroundLayer, screenWidth, screenHeight, playerX, playerY);
     }
 
-    public void drawForeground(Graphics g, int screenWidth, int screenHeight) {
-        drawLayer(g, foregroundLayer, screenWidth, screenHeight);
+    public void drawForeground(Graphics g, int screenWidth, int screenHeight, int playerX, int playerY) {
+        drawLayer(g, foregroundLayer, screenWidth, screenHeight, playerX, playerY);
     }
 
-    public void draw(Graphics g, int screenWidth, int screenHeight) {
-        drawLayer(g, backgroundLayer, screenWidth, screenHeight);
-        drawLayer(g, foregroundLayer, screenWidth, screenHeight);
+    public void draw(Graphics g, int screenWidth, int screenHeight, int playerX, int playerY) {
+        drawLayer(g, backgroundLayer, screenWidth, screenHeight, playerX, playerY);
+        drawLayer(g, foregroundLayer, screenWidth, screenHeight, playerX, playerY);
     }
 
-    private void drawLayer(Graphics g, int[][] layer, int screen_width, int screen_height) {
-        final int screenWidth = screen_width;
-        final int screenHeight = screen_height;
-
+    private void drawLayer(Graphics g, int[][] layer, int screenWidth, int screenHeight, int playerX, int playerY) {
         int mapHeight = layer.length;
         int mapWidth = layer[0].length;
 
-        int startX = cameraX / tileWidth;
-        int startY = cameraY / tileHeight;
-        int endX = Math.min(startX + (screenWidth / tileWidth) + 2, mapWidth);
-        int endY = Math.min(startY + (screenHeight / tileHeight) + 2, mapHeight);
-        
-        // System.out.println("TilesetMap: " + screenWidth + "/" + screenHeight + " - " + mapWidth + "/" + mapHeight + " - " + startX + "/" + startY + " - " + endX + "/" + endY);
+        // Координаты игрока в тайлах
+        int playerTileX = playerX / tileWidth;
+        int playerTileY = playerY / tileHeight;
 
-        // Ограничим правую и нижнюю границу
-        if (endX > mapWidth) endX = mapWidth;
-        if (endY > mapHeight) endY = mapHeight;
+        // Радиус видимости в тайлах
+        int radiusX = viewRadiusX;
+        int radiusY = viewRadiusY;
+
+        int startX = Math.max(0, playerTileX - radiusX);
+        int endX = Math.min(mapWidth, playerTileX + radiusX + 1);
+
+        int startY = Math.max(0, playerTileY - radiusY);
+        int endY = Math.min(mapHeight, playerTileY + radiusY + 1);
 
         for (int y = startY; y < endY; y++) {
-            if (y < 0 || y >= mapHeight) continue;
-
             for (int x = startX; x < endX; x++) {
-                if (x < 0 || x >= mapWidth) continue;
-
                 int tileId = layer[y][x];
                 if (tileId < 0) continue;
 
                 int sx = (tileId % tilesPerRow) * tileWidth;
                 int sy = (tileId / tilesPerRow) * tileHeight;
+
                 int dx = x * tileWidth - cameraX;
                 int dy = y * tileHeight - cameraY;
 
@@ -174,6 +175,36 @@ public class TilesetMap {
         result[i] = s.substring(start);
         return result;
     }
+    
+    public void setCentered(boolean centered) {
+        this.centered = centered;
+    }
+
+    public void setCameraByPlayer(int playerX, int playerY, int screenWidth, int screenHeight) {
+        if (centered) {
+            int mapWidthPixels = backgroundLayer[0].length * tileWidth;
+            int mapHeightPixels = backgroundLayer.length * tileHeight;
+
+            cameraX = -(screenWidth - mapWidthPixels) / 2;
+            cameraY = -(screenHeight - mapHeightPixels) / 2;
+        } else {
+            // Камера следует за игроком, но ограничена по краям карты
+            int halfScreenWidth = screenWidth / 2;
+            int halfScreenHeight = screenHeight / 2;
+
+            int mapWidthPixels = backgroundLayer[0].length * tileWidth;
+            int mapHeightPixels = backgroundLayer.length * tileHeight;
+
+            cameraX = playerX - halfScreenWidth;
+            cameraY = playerY - halfScreenHeight;
+
+            // Ограничиваем камеру, чтобы не выйти за границы карты
+            if (cameraX < 0) cameraX = 0;
+            if (cameraY < 0) cameraY = 0;
+            if (cameraX > mapWidthPixels - screenWidth) cameraX = mapWidthPixels - screenWidth;
+            if (cameraY > mapHeightPixels - screenHeight) cameraY = mapHeightPixels - screenHeight;
+        }
+    }
 
     public int getMapWidth() {
         return backgroundLayer[0].length * tileWidth;
@@ -182,4 +213,7 @@ public class TilesetMap {
     public int getMapHeight() {
         return backgroundLayer.length * tileHeight;
     }
+    
+    public void setViewRadiusX(int x) { this.viewRadiusX = x; }
+    public void setViewRadiusY(int y) { this.viewRadiusY = y; }
 }
