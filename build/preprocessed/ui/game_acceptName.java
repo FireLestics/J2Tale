@@ -182,7 +182,7 @@ public class game_acceptName extends AbstractCanvas {
                 midlet.saveIntData("data_playerHP", 0);
                 midlet.saveIntData("data_playerHPMax", 0);
                 midlet.saveIntData("data_playerGolds", 0);
-                midlet.switchCanvas(new room_overworld(midlet));
+                midlet.switchCanvas(new room_01_goldenFlowers(midlet, "null"));
             }
         }
     }

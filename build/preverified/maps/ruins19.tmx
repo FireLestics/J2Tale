@@ -380,7 +380,4 @@
 </chunk>
   </data>
  </layer>
- <imagelayer id="5" name="images" offsetx="38.6667" offsety="254.667">
-  <image source="../images/intro2.png" width="240" height="320"/>
- </imagelayer>
 </map>

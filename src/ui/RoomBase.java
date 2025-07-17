@@ -21,6 +21,8 @@ public abstract class RoomBase extends AbstractCanvas {
     protected boolean upPressed, downPressed, leftPressed, rightPressed;
 
     protected int keyCode;
+    
+    protected String bgImagePath;
 
     protected boolean onDialog = false;
     protected String[] dialogs;
@@ -71,10 +73,12 @@ public abstract class RoomBase extends AbstractCanvas {
     }
     
     protected void drawMaps(Graphics g) {
-        for (int i = 0; i < mapLayers.length; i++) {
-            if (mapLayers[i] != null) {
-                mapLayers[i].setCamera(player.getCameraX(), player.getCameraY());
-                mapLayers[i].draw(g, getWidth(), getHeight(), player.getX(), player.getY());
+        if (mapLayers != null) {
+            for (int i = 0; i < mapLayers.length; i++) {
+                if (mapLayers[i] != null) {
+                    mapLayers[i].setCamera(player.getCameraX(), player.getCameraY());
+                    mapLayers[i].draw(g, getWidth(), getHeight(), player.getX(), player.getY());
+                }
             }
         }
     }
@@ -88,8 +92,11 @@ public abstract class RoomBase extends AbstractCanvas {
         g.fillRect(0, 0, width, height);
 
         drawMaps(g);
+        if (bgImagePath != null) {
+            imageDrawer.drawImage(g, bgImagePath, 0 - player.getCameraX(), 0 - player.getCameraY(), 0, 0);
+        }
         player.draw(g, imageDrawer);
-        player.drawDebug(g, true, false, false, true);
+        player.drawDebug(g, true, true, false, false);
         drawDialog(g);
     }
 
@@ -210,4 +217,7 @@ public abstract class RoomBase extends AbstractCanvas {
 
         player.changeAnimation("Idle", player.getCurrentDirection());
     }
+    
+    // Геттеры и сеттеры
+    public void setBgImagePath(String path) { this.bgImagePath = path; }
 }

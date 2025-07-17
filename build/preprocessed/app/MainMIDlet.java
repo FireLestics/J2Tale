@@ -7,6 +7,7 @@ import tools.GameSaveManager;
 import ui.AbstractCanvas;
 import ui.game_start;
 import ui.room_overworld;
+import ui.room_01_goldenFlowers;
 
 public class MainMIDlet extends MIDlet {
 
@@ -33,8 +34,9 @@ public class MainMIDlet extends MIDlet {
         saveManager = new GameSaveManager();
         player = new SimpleMIDIPlayer();
         display = Display.getDisplay(this);
-        switchCanvas(new room_overworld(this));
-        //switchCanvas(new game_start(this));
+        switchCanvas(new game_start(this));
+        //switchCanvas(new room_overworld(this));
+        //switchCanvas(new room_01_goldenFlowers(this));
     }
 
     public void startApp() {

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins19.tmx",
+    "activeFile": "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins1.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -13,12 +13,20 @@
             "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
+        "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins1.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 29,
+                "y": 147.33333333333334
+            }
+        },
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins19.tmx": {
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 399.33333333333337,
-                "y": 288
+                "x": 346.66666666666663,
+                "y": 500.66666666666663
             }
         },
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins6.tmx": {
@@ -63,13 +71,15 @@
     "map.tileWidth": 20,
     "openFiles": [
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/images/tiles/ruins.tsx",
-        "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins19.tmx"
+        "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins19.tmx",
+        "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins1.tmx"
     ],
     "project": "j2tale.tiled-project",
     "property.type": "string",
     "recentFiles": [
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/images/tiles/ruins.tsx",
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins19.tmx",
+        "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins1.tmx",
         "C:/Users/IgniteSizzle/Documents/NetBeansProjects/J2Tale Base/res/maps/ruins6.tmx",
         "testRoom.tmx",
         "ruins1.tsx",
