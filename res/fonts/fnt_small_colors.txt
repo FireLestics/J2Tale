@@ -1,2 +1,0 @@
-white=fnt_small
-gray=fnt_small_gray
