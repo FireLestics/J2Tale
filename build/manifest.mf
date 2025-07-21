@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-MIDlet-1: Midlet, , app.MainMIDlet
-=======
 MIDlet-1: Midlet, , j2tale_base.Midlet
->>>>>>> b4b7933 (Auto commit Sat 07/19/2025  0:47:40.00)
 MIDlet-Vendor: Vendor
 MIDlet-Name: J2Tale Base
 MIDlet-Version: 1.0

@@ -4,15 +4,13 @@ import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import j2tale_base.tools.SimpleMIDIPlayer;
 import j2tale_base.tools.GameSaveManager;
-import j2tale_base.scenes.AbstractCanvas;
-import j2tale_base.scenes.game_start;
-import j2tale_base.scenes.room_example;
+import j2tale_base.scenes.SceneManager;
+import j2tale_base.scenes.room_start;
 
 public class Midlet extends MIDlet {
-
+    private SceneManager sceneManager;
     private SimpleMIDIPlayer player;
     private Display display;
-    private AbstractCanvas currentCanvas;
     private GameSaveManager saveManager;
     private boolean onIntro = false;
     
@@ -30,10 +28,12 @@ public class Midlet extends MIDlet {
     private int BKSC = 0;
 
     public Midlet() {
-        saveManager = new GameSaveManager();
         player = new SimpleMIDIPlayer();
-        display = Display.getDisplay(this);
-        switchCanvas(new room_example(this));
+        saveManager = new GameSaveManager();
+        if (sceneManager == null) {
+            sceneManager = new SceneManager(this);
+            sceneManager.setScene(new room_start(sceneManager));
+        }
     }
 
     public void startApp() {
@@ -43,32 +43,11 @@ public class Midlet extends MIDlet {
     }
 
     public void destroyApp(boolean unconditional) {
-        if (currentCanvas != null) {
-            currentCanvas.destroy();
-            currentCanvas = null;
-        }
         if (saveManager != null) {
             saveManager.close();
         }
         if (player != null) {
             stopAllMIDI();
-        }
-    }
-
-    // Работа с фреймами
-    public void switchCanvas(AbstractCanvas newCanvas) {
-        display.setCurrent(newCanvas);
-
-        if (currentCanvas != null) {
-            currentCanvas.stop(); // Останавливаем поток старого Canvas
-            currentCanvas.destroy();
-            currentCanvas = null;
-            System.gc();
-        }
-
-        currentCanvas = newCanvas;
-        if (currentCanvas != null) {
-            currentCanvas.start(); // Запускаем поток нового Canvas
         }
     }
 
@@ -140,8 +119,8 @@ public class Midlet extends MIDlet {
 
     // Работа с MIDI
     public void playMIDI(String name, int replay, boolean onMusic) {
-        if (onMusic == true) {
-            player.loadBackgroundMusic("midi/" + name + ".mid", replay);
+        if (onMusic) {
+            player.loadBackgroundMusic(name, replay);
             player.playBackgroundMusic();
         }
     }
@@ -180,7 +159,7 @@ public class Midlet extends MIDlet {
         if (saveManager != null) {
             return saveManager.loadInt(key, 0);
         } else {
-            System.out.println("Error: saveManager is null in getBooleanData!");
+            System.out.println("Error: saveManager is null in getIntData!");
             return 0;
         }
     }
@@ -189,7 +168,7 @@ public class Midlet extends MIDlet {
         if (saveManager != null) {
             return saveManager.loadInt(key, defInt);
         } else {
-            System.out.println("Error: saveManager is null in getBooleanData!");
+            System.out.println("Error: saveManager is null in getIntData!");
             return 0;
         }
     }
@@ -198,7 +177,7 @@ public class Midlet extends MIDlet {
         if (saveManager != null) {
             return saveManager.loadString(key, "");
         } else {
-            System.out.println("Error: saveManager is null in getBooleanData!");
+            System.out.println("Error: saveManager is null in getStringData");
             return "";
         }
     }
@@ -208,6 +187,7 @@ public class Midlet extends MIDlet {
             boolean value = saveManager.loadBoolean(key, false);
             return value;
         } else {
+            System.out.println("Error: saveManager is null in getBooleanData");
             return false;
         }
     }

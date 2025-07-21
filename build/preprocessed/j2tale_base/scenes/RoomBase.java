@@ -7,7 +7,7 @@ import j2tale_base.tools.ImageDrawer;
 import j2tale_base.objects.Player;
 import j2tale_base.objects.TilesetMap;
 
-public abstract class RoomBase extends AbstractCanvas {
+public abstract class RoomBase extends Scene {
     protected Player player;
     protected TextBlitter textBlitter;
     protected ImageDrawer imageDrawer = new ImageDrawer();
@@ -30,10 +30,9 @@ public abstract class RoomBase extends AbstractCanvas {
 
     protected Midlet midlet;
 
-    public RoomBase(Midlet midlet) {
-        super(midlet);
+    public RoomBase(SceneManager manager, Midlet midlet) {
+        super(manager);
         this.midlet = midlet;
-        setFullScreenMode(true);
         midlet.loadAllKeyCode();
 
         textBlitter = new TextBlitter();
