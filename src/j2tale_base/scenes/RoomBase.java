@@ -1,6 +1,7 @@
 package j2tale_base.scenes;
 
 import javax.microedition.lcdui.*;
+import java.util.Hashtable;
 import j2tale_base.Midlet;
 import j2tale_base.tools.TextBlitter;
 import j2tale_base.tools.ImageDrawer;
@@ -17,6 +18,10 @@ public abstract class RoomBase extends Scene {
 
     protected int width = getWidth();
     protected int height = getHeight();
+    
+    protected int roomId = -1;
+    protected String roomName = "Без имени";
+    protected Hashtable spawnPoints = new Hashtable();
 
     protected boolean upPressed, downPressed, leftPressed, rightPressed;
 
@@ -102,8 +107,11 @@ public abstract class RoomBase extends Scene {
         }
 
         player.draw(g, imageDrawer);
-        player.drawDebug(g, true, true, false, false);
+        player.drawDebug(g, true, true, true, true);
         drawDialog(g);
+        
+        textBlitter.setFont("fnt_maintext", "yellow");
+        textBlitter.drawString(g, "X/Y: " + player.getX() + "/" + player.getY(), 5, 5);
     }
 
     protected void updatePlayerMovement() {
@@ -206,5 +214,43 @@ public abstract class RoomBase extends Scene {
 
     public void setBgImagePath(String path) {
         this.bgImagePath = path;
+    }
+    
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String name) {
+        this.roomName = name;
+    }
+
+    public void addSpawnPoint(String id, int[] pos) {
+        spawnPoints.put(id, pos);
+    }
+
+    public int[] getSpawnPoint(String id) {
+        return (int[]) spawnPoints.get(id);
+    }
+
+    public Hashtable getSpawnPoints() {
+        return spawnPoints;
+    }
+    
+    public void spawnPlayerAt(String spawnId) {
+        int[] pos = getSpawnPoint(spawnId);
+        if (pos != null && pos.length >= 2) {
+            player.setX(pos[0]);
+            player.setY(pos[1]);
+        } else {
+            System.out.println("Spawn point not found: " + spawnId);
+        }
     }
 }

@@ -742,7 +742,7 @@ public class room_intromenu extends Scene {
                         midlet.saveStringData("data_cellphoneSlot_5", "");
                         midlet.saveStringData("data_cellphoneSlot_6", "");
                         midlet.saveStringData("data_cellphoneSlot_7", "");
-                        manager.setScene(new room_area1(manager));
+                        manager.setScene(new room_area1(manager, "start"));
                         // midlet.saveIntData("data_", 0);
                         // midlet.saveStringData("data_", "");
                         // midlet.saveBooleanData("data_", false);

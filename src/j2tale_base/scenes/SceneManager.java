@@ -30,6 +30,14 @@ public class SceneManager {
     public Midlet getMidlet() {
         return midlet;
     }
+    public void switchToRoom(int roomId) {
+        RoomBase nextRoom = RoomManager.getRoom(roomId);
+        if (nextRoom != null) {
+            setScene(nextRoom);
+        } else {
+            System.out.println("Комната с id " + roomId + " не найдена!");
+        }
+    }   
     
     public int getFPS() {
         return loop.getCurrentFPS();
