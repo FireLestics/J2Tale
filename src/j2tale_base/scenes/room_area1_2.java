@@ -56,6 +56,9 @@ public class room_area1_2 extends RoomBase {
         if (player.isInsideTrigger("next_room2")) {
             manager.setScene(new room_area1(manager, "bed"));
         }
+        if (player.isInsideTrigger("next_room1")) {
+            manager.setScene(new room_ruins1(manager, "pos1"));
+        }
     }
 
     public void paint(Graphics g) {

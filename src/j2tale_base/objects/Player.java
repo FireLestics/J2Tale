@@ -492,5 +492,7 @@ public class Player {
     public int getCameraX() { return cameraX; }
     public int getCameraY() { return cameraY; }
     public String getLastTriggerAction() { return lastTriggerAction; }
-
+    public int getColissionsCount() { return collisionBoxes.size(); }
+    public int getTriggersCount() { return triggerZones.size(); }
+    public int getNpcsCount() { return npcs.size(); }
 }

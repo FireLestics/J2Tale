@@ -71,13 +71,33 @@ public abstract class RoomBase extends Scene {
                 layers[i] = null;
             }
         }
-
+        
         this.mapLayers = layers;
     }
     
     protected void loadMapLayers(String basePath, int tileWidth, int tileHeight) {
         TilesetMap[] layers = new TilesetMap[1];
         layers[0] = new TilesetMap(basePath, tileWidth, tileHeight);
+        this.mapLayers = layers;
+    }
+    
+    protected void loadMapLayers(String basePath, String imagePath, String imageMapPath, int tileWidth, int tileHeight, int layerCount) {
+        TilesetMap[] layers = new TilesetMap[layerCount + 1];
+
+        for (int i = 0; i < layerCount; i++) {
+            try {
+                String layerPath = (i == 0)
+                        ? basePath + "_map.csv"
+                        : basePath + "_map" + (i + 1) + ".csv";
+
+                layers[i] = new TilesetMap(layerPath, imagePath, tileWidth, tileHeight);
+            } catch (Exception e) {
+                System.out.println("Ошибка при загрузке слоя " + (i + 1) + ": " + e.getMessage());
+                layers[i] = null;
+            }
+        }
+        layers[layerCount] = new TilesetMap(basePath, tileWidth, tileHeight);
+        
         this.mapLayers = layers;
     }
 
@@ -110,8 +130,14 @@ public abstract class RoomBase extends Scene {
         player.drawDebug(g, true, true, true, true);
         drawDialog(g);
         
+        String info;
+        info = "X/Y: " + player.getX() + "/" + player.getY() + "\n";
+        info = info + "Triggers: " + player.getTriggersCount() + "\n";
+        info = info + "Collisions: " + player.getColissionsCount() + "\n";
+        info = info + "Npcs: " + player.getNpcsCount();
+        
         textBlitter.setFont("fnt_maintext", "yellow");
-        textBlitter.drawString(g, "X/Y: " + player.getX() + "/" + player.getY(), 5, 5);
+        textBlitter.drawString(g, info, 5, 5);
     }
 
     protected void updatePlayerMovement() {
