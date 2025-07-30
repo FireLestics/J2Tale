@@ -127,7 +127,7 @@ public abstract class RoomBase extends Scene {
         }
 
         player.draw(g, imageDrawer);
-        player.drawDebug(g, true, true, true, true);
+        // player.drawDebug(g, true, true, true, true);
         drawDialog(g);
         
         String info;

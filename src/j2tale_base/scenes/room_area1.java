@@ -21,6 +21,8 @@ public class room_area1 extends RoomBase {
         this.midlet = manager.getMidlet();
         imageDrawer = new ImageDrawer();
         
+        midlet.cleanupResources();
+        
         loadMapLayers("/maps/4_Ruins_StartingPoint.png", 20, 20);
         for (int i = 0; i < mapLayers.length; i++) {
             if (mapLayers[i] == null) { continue; }

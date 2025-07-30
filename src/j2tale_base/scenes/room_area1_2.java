@@ -20,6 +20,8 @@ public class room_area1_2 extends RoomBase {
         this.midlet = manager.getMidlet();
         imageDrawer = new ImageDrawer();
         
+        midlet.cleanupResources();
+        
         loadMapLayers("/maps/5_Ruins_FloweySpot.png", 20, 20);
         for (int i = 0; i < mapLayers.length; i++) {
             if (mapLayers[i] == null) { continue; }
