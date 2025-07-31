@@ -64,41 +64,6 @@ public class room_ruins1 extends RoomBase {
         createFormedColission("form1", 160, 420, 0);
     }
     
-    private void createFormedColission(String form, int x, int y, int rotation) {
-        int width = 19;
-        int height = 19;
-        int i;
-        if ("form1".equals(form)) {
-            if (rotation == 0) {
-                player.addCollisionBox(x, (height + y) - 1, width, 1);
-                for (i = 0; i <= ((width + height + 2) / 4) - 2; i++) {
-                    player.addCollisionBox(x + 2 + (i * 2), (height + y) - 2 - (i * 2), 1, 1);
-                }
-                player.addCollisionBox(x+18, (height + y) - 19, 1, height);
-            } else if (rotation == 1) {
-                player.addCollisionBox(x, y, 1, height);
-                for (i = 0; i <= ((width + height + 2) / 4) - 2; i++) {
-                    player.addCollisionBox(x + 2 + (i * 2), y + 2 + (i * 2), 1, 1);
-                }
-                player.addCollisionBox(x, y + height, width, 1);
-            } else if (rotation == 2) {
-                // Повернутый на 180 градусов вариант (пример)
-                player.addCollisionBox(x, y, width, 1);
-                for (i = 0; i <= ((width + height + 2) / 4) - 2; i++) {
-                    player.addCollisionBox(x + width - 3 - i*2, y + 2 + i * 2, 1, 1);
-                }
-                player.addCollisionBox(x, y, 1, height);
-            } else if (rotation == 3) {
-                // Повернутый на 270 градусов вариант (пример)
-                player.addCollisionBox(x, y, width, 1);
-                for (i = 0; i <= ((width + height + 2) / 4) - 2; i++) {
-                    player.addCollisionBox(x + width - 2 - i * 2, y + height - 2 - i * 2, 1, 1);
-                }
-                player.addCollisionBox(x + width, y, 1, height);
-            }
-        }
-    }
-    
     public void update() {
         updatePlayerMovement();
         player.update();
