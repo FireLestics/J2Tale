@@ -143,7 +143,7 @@ public abstract class RoomBase extends Scene {
             TilesetMap map = mapLayers[i];
             if (map != null) {
                 map.setCamera(player.getCameraX(), player.getCameraY());
-                map.draw(g, getWidth(), getHeight(), player.getX(), player.getY());
+                map.draw(g, getWidth(), getHeight(), player.getX(), player.getY(), width, height);
             }
         }
     }

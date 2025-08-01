@@ -232,7 +232,7 @@ public class TilesetMap {
         return true;
     }
 
-    public void draw(Graphics g, int screenWidth, int screenHeight, int playerX, int playerY) {
+    public void draw(Graphics g, int screenWidth, int screenHeight, int playerX, int playerY, int scrnW, int scrnH) {
         if (backgroundLayer == null || tilesetAndMapImage == null) return;
 
         int mapHeight = backgroundLayer.length;
@@ -262,7 +262,7 @@ public class TilesetMap {
                 int dx = x * tileWidth - cameraX;
                 int dy = y * tileHeight - cameraY;
 
-                imageDrawer.drawImageRegion(g, tilesetAndMapImage, sx, sy, tileWidth, tileHeight, dx, dy);
+                imageDrawer.drawImageRegion(g, tilesetAndMapImage, sx, sy, tileWidth, tileHeight, dx, dy, scrnW, scrnH);
             }
         }
     }

@@ -45,6 +45,10 @@ public class room_start extends Scene {
                 pass(onIntro);
             } else if ("580x360".equals(width + "x" + height)) {
                 pass(onIntro);
+            } else if ("320x308".equals(width + "x" + height)) {
+                pass(onIntro);
+            } else if ("320x320".equals(width + "x" + height)) {
+                pass(onIntro);
             } else {
                 if (!error) {
                     this.errorCode = 0;
