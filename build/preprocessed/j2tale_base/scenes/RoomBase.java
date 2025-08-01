@@ -2,11 +2,38 @@ package j2tale_base.scenes;
 
 import javax.microedition.lcdui.*;
 import java.util.Hashtable;
+import java.util.Vector;
 import j2tale_base.Midlet;
 import j2tale_base.tools.TextBlitter;
 import j2tale_base.tools.ImageDrawer;
 import j2tale_base.objects.Player;
 import j2tale_base.objects.TilesetMap;
+
+class Object {
+    String image;
+    boolean onCollision;
+    int x;
+    int y;
+    int actionX;
+    int actionY;
+    int collisionX;
+    int collisionY;
+    int collisionWidth;
+    int collisionHeight;
+
+    public Object(String image, int x, int y, int actionX, int actionY, boolean onCollision, int collisionX, int collisionY, int collisionWidth, int collisionHeight) {
+        this.image = image;
+        this.onCollision = onCollision;
+        this.x = x;
+        this.y = y;
+        this.actionX = actionX;
+        this.actionY = actionY;
+        this.collisionX = collisionX;
+        this.collisionY = collisionY;
+        this.collisionWidth = collisionWidth;
+        this.collisionHeight = collisionHeight;
+    }
+}
 
 public abstract class RoomBase extends Scene {
     protected Player player;
@@ -16,6 +43,8 @@ public abstract class RoomBase extends Scene {
 
     protected TilesetMap[] mapLayers;
     protected TilesetMap collisions;
+    
+    private Vector objects;
 
     protected int width = getWidth();
     protected int height = getHeight();
@@ -41,15 +70,25 @@ public abstract class RoomBase extends Scene {
     private int menuYScale = 38;
     
     private String playerName;
+    private String playerWeapon;
+    private String playerArmor;
     private int playerLV;
     private int playerHP;
     private int playerHPMax;
     private int playerGolds;
+    private int playerAT;
+    private int playerWeaponAT;
+    private int playerDF;
+    private int playerArmorDF;
+    private int playerExp;
+    private int playerExpNext;
 
     public RoomBase(SceneManager manager, Midlet midlet) {
         super(manager);
         this.midlet = midlet;
         midlet.loadAllKeyCode();
+        
+        objects = new Vector();
 
         textBlitter = new TextBlitter();
         imageDrawer = new ImageDrawer();
@@ -173,13 +212,22 @@ public abstract class RoomBase extends Scene {
             imageDrawer.drawImage(g, bgImagePath, 0 - player.getCameraX(), 0 - player.getCameraY(), 0, 0);
         }
         g.setClip(0, 0, width, height);
-
-        player.draw(g, imageDrawer);
+        
+        if (inLayerObj()) {
+            player.draw(g, imageDrawer);
+            drawObjects(g);
+        } else {
+            drawObjects(g);
+            player.draw(g, imageDrawer);
+        }
         g.setClip(0, 0, width, height);
-        // player.drawDebug(g, true, true, true, true);
-        // g.setClip(0, 0, width, height);
+        
+//        player.drawDebug(g, true, true, true, true);
+//        g.setClip(0, 0, width, height);
+        
         drawPlayerMenu(g);
         g.setClip(0, 0, width, height);
+        
         drawDialog(g);
         g.setClip(0, 0, width, height);
         
@@ -189,8 +237,49 @@ public abstract class RoomBase extends Scene {
         info = info + "Collisions: " + player.getColissionsCount() + "\n";
         info = info + "Npcs: " + player.getNpcsCount();
         
-//        textBlitter.setFont("fnt_maintext", "yellow");
-//        textBlitter.drawString(g, info, 5, 5);
+        textBlitter.setFont("fnt_maintext", "yellow");
+        textBlitter.drawString(g, info, 5, 5);
+    }
+    
+    public void addObject(String sprite, int x, int y, int actionX, int actionY, int collisionX, int collisionY, int collisionWidth, int collisionHeight) {
+        objects.addElement(new Object(sprite, x, y, actionX, actionY, true, collisionX, collisionY, collisionWidth, collisionHeight));
+    }
+    public void addObject(String sprite, int x, int y, int actionX, int actionY) {
+        objects.addElement(new Object(sprite, x, y, actionX, actionY, false, 0, 0, 0, 0));
+    }
+    
+    public void drawObjects(Graphics g) {
+        if (objects != null) {
+            for (int i = 0; i < objects.size(); i++) {
+                Object object = (Object) objects.elementAt(i);
+                imageDrawer.drawImage(g, object.image, object.x - player.getCameraX(), object.y - player.getCameraY(), object.actionX, object.actionY);
+            }
+        }
+    }
+    
+    public void createCollisionsObjects() {
+        if (objects != null) {
+            for (int i = 0; i < objects.size(); i++) {
+                Object object = (Object) objects.elementAt(i);
+                if (object.onCollision == true){
+                    player.addCollisionBox(object.x + object.collisionX, object.y + object.collisionY, object.collisionWidth, object.collisionHeight);
+                }
+            }
+        }
+    }
+    
+    public boolean inLayerObj() {
+        if (objects != null) {
+            for (int i = 0; i < objects.size(); i++) {
+                Object object = (Object) objects.elementAt(i);
+                if (player.getY() < object.y) {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
     }
 
     protected void updatePlayerMovement() {
@@ -277,27 +366,33 @@ public abstract class RoomBase extends Scene {
             g.setClip(0, 0, width, height);
         }
         if (onMenu == 2) {
+            String playerInfo = "\"" + playerName + "\"\n\n";
+            playerInfo = playerInfo + "LV " + playerLV + "\n";
+            playerInfo = playerInfo + "HP " + playerHP + " / " + playerHPMax + "\n\n";
+            playerInfo = playerInfo + "AT " + playerAT + " (" + playerWeaponAT + ")      ";
+            playerInfo = playerInfo + "EXP: " + playerExp + "\n";
+            playerInfo = playerInfo + "DF " + playerDF + " (" + playerArmorDF + ")      ";
+            playerInfo = playerInfo + "NEXT: " + playerExpNext + "\n\n";
+            playerInfo = playerInfo + "WEAPON: " + playerWeapon + "\n";
+            playerInfo = playerInfo + "ARMOR: " + playerArmor + "\n\n";
+            playerInfo = playerInfo + "GOLD: " + playerGolds;
+            
+            int StatX = 0;
             if (width < 320) {
-                g.setColor(0x000000);
-                g.fillRect(55, 5, 180, 220);
-                g.setColor(0xFFFFFF);
-                drawThickRect(g, 55, 5, 180, 220, 3);
-                g.setClip(0, 0, width, height);
-                
-                String playerInfo = "\"" + playerName + "\"\n\n";
-                playerInfo = playerInfo + "LV " + playerLV + "\n";
-                playerInfo = playerInfo + "HP " + playerHP + " / " + playerHPMax + "\n\n";
-                playerInfo = playerInfo + "AT 99 (99)" + "      ";
-                playerInfo = playerInfo + "EXP: 10000" + "\n";
-                playerInfo = playerInfo + "DF 99 (99)" + "      ";
-                playerInfo = playerInfo + "NEXT: 100000" + "\n\n";
-                playerInfo = playerInfo + "WEAPON: Stick" + "\n";
-                playerInfo = playerInfo + "ARMOR: Bandage" + "\n\n";
-                playerInfo = playerInfo + "GOLD: " + playerGolds;
-                textBlitter.setFont("fnt_maintext", "white");
-                textBlitter.drawString(g, playerInfo, 18+50, 20);
-                g.setClip(0, 0, width, height);
+                StatX = width - 180 - 5;
+            } else {
+                StatX = 80;
             }
+                
+            g.setColor(0x000000);
+            g.fillRect(StatX, 5, 180, 220);
+            g.setColor(0xFFFFFF);
+            drawThickRect(g, StatX, 5, 180, 220, 3);
+            g.setClip(0, 0, width, height);
+
+            textBlitter.setFont("fnt_maintext", "white");
+            textBlitter.drawString(g, playerInfo, StatX + 13, 20);
+            g.setClip(0, 0, width, height);
         }
     }
 
@@ -342,10 +437,18 @@ public abstract class RoomBase extends Scene {
                 onMenu = 1;
                 
                 playerName = midlet.getStringData("data_playerName");
+                playerWeapon = midlet.getStringData("data_playerWeapon");
+                playerArmor = midlet.getStringData("data_playerArmor");
                 playerLV = midlet.getIntData("data_playerLV");
                 playerHP = midlet.getIntData("data_playerHP");
                 playerHPMax = midlet.getIntData("data_playerHPMax");
                 playerGolds = midlet.getIntData("data_playerGolds");
+                playerAT = midlet.getIntData("data_playerAT");
+                playerWeaponAT = midlet.getIntData("data_playerWeaponAT");
+                playerDF = midlet.getIntData("data_playerDF");
+                playerArmorDF = midlet.getIntData("data_playerArmorDF");
+                playerExp = midlet.getIntData("data_playerExp");
+                playerExpNext = midlet.getIntData("data_playerExpNext");
             }
         } else {
             handleDialogKey(keyCode);
@@ -405,6 +508,12 @@ public abstract class RoomBase extends Scene {
             player.setY(pos[1]);
         } else {
             System.out.println("Spawn point not found: " + spawnId);
+        }
+    }
+    
+    public void spawnObject(Graphics g, String objectName, int x, int y) {
+        if ("save_point".equals(objectName)) {
+            
         }
     }
 }

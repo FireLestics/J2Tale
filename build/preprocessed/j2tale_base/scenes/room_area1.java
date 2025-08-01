@@ -9,7 +9,6 @@ public class room_area1 extends RoomBase {
     private Midlet midlet;
     private ImageDrawer imageDrawer;
     
-    
     private String Room_name = "";
     private String spawnPos = "null";
     
@@ -47,6 +46,9 @@ public class room_area1 extends RoomBase {
         spawnPlayerAt(spawnID);
         
         player.addTriggerZone(600, 120, 40, 20, "next_room", "next_room");
+        addObject("/images/assets/ruins_colona.png", 90, 120, 20, 60, -18, -7, 34, 4);
+        addObject("/images/assets/ruins_colona.png", 140, 120, 20, 60);
+        createCollisionsObjects();
     }
     
     public void update() {

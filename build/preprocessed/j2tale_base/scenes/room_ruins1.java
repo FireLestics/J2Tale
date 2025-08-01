@@ -73,6 +73,7 @@ public class room_ruins1 extends RoomBase {
     public void paint(Graphics g) {
         g.setColor(0x000000);
         g.fillRect(0, 0, getWidth(), getHeight());
+        
         drawCommon(g);
     }
 
