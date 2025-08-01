@@ -38,6 +38,5 @@ public class ImageDrawer {
     public void drawImageRegion(Graphics g, Image source, int srcX, int srcY, int width, int height, int destX, int destY, int scrnWidth, int scrnHeight) {
         g.setClip(destX, destY, width, height); // Ограничиваем область вывода
         g.drawImage(source, destX - srcX, destY - srcY, Graphics.TOP | Graphics.LEFT);
-        g.setClip(0, 0, scrnWidth, scrnHeight);
     }
 }
